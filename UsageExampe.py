@@ -3,7 +3,7 @@ from VirtualBlinkstick import VirtualBlinkStick
 import math
 import time
 
-ambilight = Ambilight(200, 50)
+ambilight = Ambilight(60, 50)
 blinkstick = VirtualBlinkStick()
 blinkstick.connect()
 

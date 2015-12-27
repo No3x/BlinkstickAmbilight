@@ -15,23 +15,21 @@ class Ambilight:
         self.HEIGHT = root.winfo_screenheight()
         self.STRIPE_LENGTH = (2 * self.HEIGHT) + (2 * self.WIDTH)
         self.currentColors = collections.OrderedDict()
+        self.current_image_all = None
 
     def run(self):
         top, right, bottom, left = self.__makeImages()
-        # self.doMath(top)
         # self.__save(right, "right_debug.png")
         self.__concat(top, right, bottom, left)
-        #self.__drawBalkens()
+        # self.__drawBalkens()
         self.__calcColors()
 
     def __makeImages(self):
         # start_x, start_y, breite, hoehe
-        top = pyscreeze.screenshot(region=(0, 0, self.WIDTH, self.BORDER), imageFilename='top.png')
-        right = pyscreeze.screenshot(region=(self.WIDTH - self.BORDER, 0, self.BORDER, self.HEIGHT),
-                                     imageFilename='right.png')
-        bottom = pyscreeze.screenshot(region=(0, self.HEIGHT - self.BORDER, self.WIDTH, self.BORDER),
-                                      imageFilename='bottom.png')
-        left = pyscreeze.screenshot(region=(0, 0, self.BORDER, self.HEIGHT), imageFilename='left.png')
+        top = pyscreeze.screenshot(region=(0, 0, self.WIDTH, self.BORDER))
+        right = pyscreeze.screenshot(region=(self.WIDTH - self.BORDER, 0, self.BORDER, self.HEIGHT))
+        bottom = pyscreeze.screenshot(region=(0, self.HEIGHT - self.BORDER, self.WIDTH, self.BORDER))
+        left = pyscreeze.screenshot(region=(0, 0, self.BORDER, self.HEIGHT))
         return top, right, bottom, left
 
 
@@ -42,7 +40,6 @@ class Ambilight:
         del draw
 
     def __save(self, im, name):
-        # write
         im.save(name, "PNG")
 
     def __concat(self, top, right, bottom, left):
@@ -57,22 +54,19 @@ class Ambilight:
         blank_image.paste(right, (top.size[0], 0))
         blank_image.paste(bottom, (top.size[0] + right.size[0], 0))
         blank_image.paste(left, (top.size[0] + right.size[0] + bottom.size[0], 0))
-        print top.size[0] + right.size[0] + bottom.size[0]
-        blank_image.save('all.png')
+        # print top.size[0] + right.size[0] + bottom.size[0]
+        self.current_image_all = blank_image
 
     def __drawBalkens(self):
-        im = Image.open('all.png')
-        draw = ImageDraw.Draw(im)
-        width, height = im.size
+        draw = ImageDraw.Draw(self.current_image_all)
+        width, height = self.current_image_all.size
         div = width / self.NUMLED
         iteratedPixels = 0
         for pixel in list(range(0, width)):
             iteratedPixels = iteratedPixels + 1
             if iteratedPixels % div == 0:
                 draw.line((iteratedPixels, 0, iteratedPixels, height), fill=128, width=3)
-
         del draw
-        im.save('all.png')
 
     def __improvedMedian(self, im):
         # grab width and height
@@ -85,7 +79,6 @@ class Ambilight:
             for y in range(height):
                 cpixel = pixels[x, y]
                 data.append(cpixel)
-
         r = 0
         g = 0
         b = 0
@@ -115,16 +108,15 @@ class Ambilight:
         return [rAvg, gAvg, bAvg]
 
     def __calcColors(self):
-        all = Image.open('all.png')
         i = 0
         count = 0
-        width, height = all.size
+        width, height = self.current_image_all.size
         div = width / self.NUMLED
         while (i <= self.STRIPE_LENGTH):
             # skip first chunk
             if i >= self.STRIPE_LENGTH / self.NUMLED:
                 count = count + 1
-                chunk = all.crop(box=(count*div, 0, self.STRIPE_LENGTH - (self.NUMLED-count)*div, self.BORDER))
+                chunk = self.current_image_all.crop(box=(count*div, 0, self.STRIPE_LENGTH - (self.NUMLED-count)*div, self.BORDER))
                 #hex = self.__improvedMedian(chunk)#ImageStat.Stat(chunk)._getmean()
                 self.currentColors[count] = ImageStat.Stat(chunk)._getmean()
             i = i + self.STRIPE_LENGTH / self.NUMLED
