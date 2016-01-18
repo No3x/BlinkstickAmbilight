@@ -1,7 +1,5 @@
 from Ambilight import Ambilight
 from VirtualBlinkstick import VirtualBlinkStick
-import math
-import time
 
 ambilight = Ambilight(60, 50)
 blinkstick = VirtualBlinkStick()

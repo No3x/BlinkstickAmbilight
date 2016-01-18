@@ -1,9 +1,8 @@
 import collections
-
-__author__ = 'Christian'
 import pyscreeze
 import Tkinter
 from PIL import Image, ImageDraw, ImageStat
+__author__ = 'Christian'
 
 root = Tkinter.Tk()
 
@@ -21,7 +20,7 @@ class Ambilight:
         top, right, bottom, left = self.__makeImages()
         # self.__save(right, "right_debug.png")
         self.__concat(top, right, bottom, left)
-        # self.__drawBalkens()
+        self.__drawBalkens()
         self.__calcColors()
 
     def __makeImages(self):
@@ -46,7 +45,6 @@ class Ambilight:
         right = right.rotate(90)
         bottom = bottom.rotate(-180)
         left = left.rotate(-90)
-        # Image.new("RGB", (width, height) )
         # top.size[0] = width, top.size[1] = height
         blank_image = Image.new("RGB", (top.size[0] + right.size[0] + bottom.size[0] + left.size[0], top.size[1]))
         # Image.paste(im, ( x, y) )
