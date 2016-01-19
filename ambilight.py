@@ -2,6 +2,9 @@ import collections
 import pyscreeze
 import Tkinter
 from PIL import Image, ImageDraw, ImageStat
+
+from ImageUtils import ImageUtils
+
 __author__ = 'Christian'
 
 root = Tkinter.Tk()
@@ -13,6 +16,7 @@ class Ambilight:
         self.WIDTH = root.winfo_screenwidth()
         self.HEIGHT = root.winfo_screenheight()
         self.STRIPE_LENGTH = (2 * self.HEIGHT) + (2 * self.WIDTH)
+        self.imageUtils = ImageUtils()
         self.currentColors = collections.OrderedDict()
         self.current_image_all = None
 
@@ -23,19 +27,7 @@ class Ambilight:
         self.__calcColors()
 
     def __makeImages(self):
-        # start_x, start_y, breite, hoehe
-        top = pyscreeze.screenshot(region=(0, 0, self.WIDTH, self.BORDER))
-        right = pyscreeze.screenshot(region=(self.WIDTH - self.BORDER, 0, self.BORDER, self.HEIGHT))
-        bottom = pyscreeze.screenshot(region=(0, self.HEIGHT - self.BORDER, self.WIDTH, self.BORDER))
-        left = pyscreeze.screenshot(region=(0, 0, self.BORDER, self.HEIGHT))
-
-        # Loop over ImageCrop to make Images
-        out = []
-        for i, image in enumerate( (top, right, bottom, left) ):
-            image_copy = Image.new(image.mode, image.size)
-            image_copy.putdata(list(image.getdata()))
-            out.append( (image_copy) )
-        return out[0], out[1], out[2], out[3]
+        return self.imageUtils.makeImagesOfCorners( self.BORDER )
 
     def __doMath(self, im):
         draw = ImageDraw.Draw(im)
@@ -47,16 +39,8 @@ class Ambilight:
         im.save(name, "PNG")
 
     def __concat(self, top, right, bottom, left):
-        rotated_images = [(image.rotate(90, expand=True) if image.height > image.width else image) for image in [top, right, bottom, left]]
-        width_total = sum(int(v.size[0]) for v in rotated_images)
-        blank_image = Image.new("RGB", (width_total, min(top.size)))
-        # Image.paste(im, ( x, y) )
-        width_processed = 0
-        for image in rotated_images:
-            blank_image.paste( image, ( width_processed, 0) )
-            width_processed += image.size[0]
-        self.current_image_all = blank_image
-        #self.__save(self.current_image_all, 'image_after_concat.png')
+        (top, right, bottom, left).count()
+        self.current_image_all = self.imageUtils.concat( (top, right, bottom, left) )
 
     def __drawBalkens(self):
         draw = ImageDraw.Draw(self.current_image_all)

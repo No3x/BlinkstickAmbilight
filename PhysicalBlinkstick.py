@@ -27,7 +27,6 @@ class Blinkstick2812(blinkstick.BlinkStickPro):
             else:
                 raise ValueError('BlinkStick is not in proper mode (see https://www.blinkstick.com/help/tutorials/blinkstick-pro-modes). Exit')
 
-    # Round values
     def __round(self, colors):
         roundedColors = []
         for k, v in colors:
@@ -44,7 +43,6 @@ class Blinkstick2812(blinkstick.BlinkStickPro):
             while 1:
                 self.send_data_all()
                 self.ambilight.run()
-                #
                 # colors = collections.OrderedDict()
                 # colors[0] = (161, 174, 188)
                 # colors[1] = (161, 174, 188)
@@ -54,11 +52,11 @@ class Blinkstick2812(blinkstick.BlinkStickPro):
                 for k, v in colors.items():
                     #print k, v
                     (R, G, B) = v
-                    R = int( math.floor( R ) )
-                    G = int( math.floor( G ) )
-                    B = int( math.floor( B ) )
+                    R = int( R )
+                    G = int( G )
+                    B = int( B )
                     self.set_color(0, k, R, G, B)
-                time.sleep(0.01)
+                time.sleep(0.02)
 
         except KeyboardInterrupt:
             self.off()
