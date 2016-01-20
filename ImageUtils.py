@@ -37,7 +37,7 @@ class ImageUtils:
                 raise ValueError('Pass more than one images to concat')
 
             width_total = sum(int(v.size[0]) for v in images)
-            concat_image = Image.new("RGB", (width_total, max(images[0].size)))
+            concat_image = Image.new("RGB", (width_total, images[0].size[1]))
             # Image.paste(im, ( x, y) )
             width_processed = 0
             for image in images:
@@ -48,4 +48,23 @@ class ImageUtils:
     def concatStripe(self, images):
         return self.concat([(image.rotate(90, expand=True) if image.height > image.width else image) for image in images])
 
+    def splitImageIntoChunks(self, image, count ):
+        chunks = []
+        i = 0
+        chunks_done = 0
+        width, height = image.size
+        div = width / count
+        while (i <= width-1*div):
+            # left, upper, right, and lower pixel
+            left = i
+            right = left+div;
+            if( count == chunks_done-1 ):
+                right = width
+            upper = 0
+            chunk = image.crop(box=(left, upper, right, height ) )
+            chunks.append( chunk )
+            chunks_done = chunks_done + 1
+            i = i + div
+        assert chunks_done == count
+        return chunks
 

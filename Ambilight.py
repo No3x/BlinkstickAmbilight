@@ -21,9 +21,9 @@ class Ambilight:
         self.current_image_all = None
 
     def run(self):
-        self.current_image_all = self.imageUtils.concat( self.imageUtils.makeImagesOfCorners( self.BORDER) )
+        self.current_image_all = self.imageUtils.concatStripe( self.imageUtils.makeImagesOfCorners( self.BORDER) )
         self.__drawBalkens()
-        self.__calcColors()
+        self.currentColors = self.__calcColors()
 
     def __doMath(self, im):
         draw = ImageDraw.Draw(im)
@@ -85,21 +85,7 @@ class Ambilight:
         return [rAvg, gAvg, bAvg]
 
     def __calcColors(self):
-        i = 0
-        chunks_done = 0
-        width, height = self.current_image_all.size
-        div = width / self.NUMLED
-        while (i <= self.STRIPE_LENGTH-1*div):
-            # left, upper, right, and lower pixel
-            left = i
-            right = left+div;
-            if( self.NUMLED == chunks_done-1 ):
-                right = self.STRIPE_LENGTH
-            lower = self.BORDER
-            upper = 0
-            chunk = self.current_image_all.crop(box=(left, upper, right, lower ) )
-            #hex = self.__improvedMedian(chunk)#ImageStat.Stat(chunk)._getmean()
-            self.currentColors[chunks_done] = ImageStat.Stat(chunk)._getmean()
-            chunks_done = chunks_done + 1
-            i = i + div
-        assert chunks_done == self.NUMLED
+        currentColors = collections.OrderedDict()
+        for i, chunk in enumerate( self.imageUtils.splitImageIntoChunks( self.current_image_all, self.NUMLED ),0 ):
+            currentColors[i] = ImageStat.Stat(chunk)._getmean()
+        return currentColors

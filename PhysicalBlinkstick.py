@@ -13,7 +13,6 @@ BORDER = 50
 class Blinkstick2812(blinkstick.BlinkStickPro):
 
     def __init__(self, ambilight=None, r_led_count=None, max_rgb_value=None, delay=None):
-        #self.bstick = blinkstick.BlinkStickPro.__init__(self, r_led_count=r_led_count, max_rgb_value=max_rgb_value, delay=delay )
         self.ambilight = ambilight
         blinkstick.BlinkStickPro.__init__(self, r_led_count=r_led_count, max_rgb_value=max_rgb_value, delay=delay )
 
@@ -39,6 +38,7 @@ class Blinkstick2812(blinkstick.BlinkStickPro):
         return roundedColors
 
     def run(self):
+        print "Running.."
         try:
             while 1:
                 self.send_data_all()
@@ -50,14 +50,12 @@ class Blinkstick2812(blinkstick.BlinkStickPro):
                 # colors[3] = (161, 174, 188)
                 colors = ambilight.currentColors
                 for k, v in colors.items():
-                    #print k, v
                     (R, G, B) = v
                     R = int( R )
                     G = int( G )
                     B = int( B )
-                    self.set_color(0, k, R, G, B)
-                time.sleep(0.02)
-
+                    self.set_color(0, k-1, R, G, B)
+                time.sleep(0.12)
         except KeyboardInterrupt:
             self.off()
             return

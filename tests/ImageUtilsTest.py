@@ -53,5 +53,26 @@ class ImageUtilsTest(unittest.TestCase):
         #self.assertEqual( width_expected, width_actual )
         #self.assertEqual( height_expected, height_actual )
 
+    def test_split_images_into_chunks_number_of_elements(self):
+        count = 4
+        chunks = self.imageUtils.splitImageIntoChunks( self.image2, count )
+        self.assertEqual( count, len(chunks) )
+
+    def test_split_images_into_chunks_width(self):
+        count = 4
+        chunks = self.imageUtils.splitImageIntoChunks( self.image2, count )
+
+        expected_width_per_chunk = self.image2.size[0] / count;
+        [ self.assertEqual( expected_width_per_chunk, image.size[0] ) for image in chunks ]
+
+    def test_split_images_into_chunks_width2(self):
+        count = 4
+        chunks = self.imageUtils.splitImageIntoChunks( self.image1, count )
+        chunks.pop(len(chunks)-1)
+        expected_width_per_chunk = self.image2.size[0] / count;
+        [ image.show() for image in chunks ]
+        [ self.assertEqual( expected_width_per_chunk, image.size[0] ) for image in chunks ]
+
+
 if __name__ == '__main__':
     unittest.main()
