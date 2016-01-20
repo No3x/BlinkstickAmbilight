@@ -1,5 +1,7 @@
 __author__ = 'No3x'
 import sys
+
+
 class Prompt:
     def query_yes_no(self, question, default="yes"):
         """Ask a yes/no question via raw_input() and return their answer.

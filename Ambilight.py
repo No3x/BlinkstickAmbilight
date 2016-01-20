@@ -1,10 +1,11 @@
+__author__ = 'No3x'
+
 import collections
 
 from PIL import ImageStat
 
 from ImageUtils import ImageUtils
 
-__author__ = 'Christian'
 
 class Ambilight:
     def __init__(self, led_num, border):
@@ -15,7 +16,7 @@ class Ambilight:
         self.current_image_all = None
 
     def run(self):
-        self.current_image_all = self.imageUtils.concatStripe( self.imageUtils.makeImagesOfCorners( self.BORDER) )
+        self.current_image_all = self.imageUtils.concatStripe(self.imageUtils.makeImagesOfCorners(self.BORDER))
         self.currentColors = self.__calcColors()
 
     def __save(self, im, name):
@@ -23,6 +24,6 @@ class Ambilight:
 
     def __calcColors(self):
         currentColors = collections.OrderedDict()
-        for i, chunk in enumerate( self.imageUtils.splitImageIntoChunks( self.current_image_all, self.NUMLED ),0 ):
+        for i, chunk in enumerate(self.imageUtils.splitImageIntoChunks(self.current_image_all, self.NUMLED), 0):
             currentColors[i] = ImageStat.Stat(chunk)._getmean()
         return currentColors
