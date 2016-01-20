@@ -1,0 +1,3 @@
+Pillow==3.1.0
+PyScreeze==0.1.8
+BlinkStick==1.1.8
