@@ -21,13 +21,9 @@ class Ambilight:
         self.current_image_all = None
 
     def run(self):
-        top, right, bottom, left = self.__makeImages()
-        self.__concat(top, right, bottom, left)
+        self.current_image_all = self.imageUtils.concat( self.imageUtils.makeImagesOfCorners( self.BORDER) )
         self.__drawBalkens()
         self.__calcColors()
-
-    def __makeImages(self):
-        return self.imageUtils.makeImagesOfCorners( self.BORDER )
 
     def __doMath(self, im):
         draw = ImageDraw.Draw(im)
@@ -37,10 +33,6 @@ class Ambilight:
 
     def __save(self, im, name):
         im.save(name, "PNG")
-
-    def __concat(self, top, right, bottom, left):
-        (top, right, bottom, left).count()
-        self.current_image_all = self.imageUtils.concat( (top, right, bottom, left) )
 
     def __drawBalkens(self):
         draw = ImageDraw.Draw(self.current_image_all)

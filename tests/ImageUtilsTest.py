@@ -2,17 +2,29 @@ import unittest
 
 from PIL import Image
 
-from Ambilight import Ambilight
 from ImageUtils import ImageUtils
 
 
 class ImageUtilsTest(unittest.TestCase):
     def setUp(self):
         self.image1 = Image.open('test1.png')
+        # test2.png Breite: 200px # Hoehe: 220px
         self.image2 = Image.open('test2.png')
         self.imageUtils = ImageUtils()
 
-    def test_small_border(self):
+    def test_makeImagesOfCorners_numbe_of_elements(self):
+        images = self.imageUtils.makeImagesOfCorners( 50 )
+        self.assertEqual( 4, len(images) )
+
+    def test_makeImagesOfCorners_size(self):
+        border = 50
+        top, right, bottom, left = self.imageUtils.makeImagesOfCorners( border )
+        self.assertEqual( top.size, ( self.imageUtils.getScreenSize()[0], border ) )
+        self.assertEqual( right.size, ( border, self.imageUtils.getScreenSize()[1] ) )
+        self.assertEqual( bottom.size, ( self.imageUtils.getScreenSize()[0], border ) )
+        self.assertEqual( left.size, ( border, self.imageUtils.getScreenSize()[1] ) )
+
+    def test_makeImagesOfCorners_small_border(self):
         with self.assertRaises(ValueError):
             self.imageUtils.makeImagesOfCorners(0)
             self.imageUtils.makeImagesOfCorners(-1)
@@ -23,29 +35,23 @@ class ImageUtilsTest(unittest.TestCase):
             self.imageUtils.concat( (self.image1) )
 
     def test_concat_proper_size(self):
-        images = (self.image1, self.image2)
+        images = (self.image2, self.image2)
         concated = self.imageUtils.concat( images )
-        width_expected = sum(int(v.size[0]) for v in images)
-        height_expected = sum(int(v.size[1]) for v in images)
+        width_expected = 200+200
+        height_expected = 220
+        width_actual, height_actual = concated.size
+        self.assertEqual( width_expected, width_actual )
+        self.assertEqual( height_expected, height_actual )
 
-        width_actual = concated.size[0]
-        height_actual = concated.size[1]
-        #TODO: Test images must have same size
-        #self.assertEquals( width_expected, width_actual )
-        #self.assertEquals( height_expected, height_actual )
-
-    def test_isupper(self):
-        self.assertTrue('FOO'.isupper())
-        self.assertFalse('Foo'.isupper())
-
-
-    def test_split(self):
-        s = 'hello world'
-        self.assertEqual(s.split(), ['hello', 'world'])
-        # check that s.split fails when the separator is not a string
-        with self.assertRaises(TypeError):
-            s.split(2)
-
+    def test_concat_stripe_proper_size(self):
+        images = (self.image2, self.image2)
+        concated = self.imageUtils.concatStripe( images )
+        width_expected = 220+220
+        height_expected = 200
+        width_actual, height_actual = concated.size
+        #TODO:
+        #self.assertEqual( width_expected, width_actual )
+        #self.assertEqual( height_expected, height_actual )
 
 if __name__ == '__main__':
     unittest.main()
