@@ -6,7 +6,6 @@ from Ambilight import Ambilight
 from Prompt import Prompt
 import time
 import math
-from random import randint
 NUMLED = 4
 BORDER = 50
 

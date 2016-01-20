@@ -73,6 +73,5 @@ class ImageUtilsTest(unittest.TestCase):
         [ image.show() for image in chunks ]
         [ self.assertEqual( expected_width_per_chunk, image.size[0] ) for image in chunks ]
 
-
 if __name__ == '__main__':
     unittest.main()
