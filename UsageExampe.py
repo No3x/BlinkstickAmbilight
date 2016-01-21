@@ -1,7 +1,7 @@
-__author__ = 'No3x'
+from BlinkstickAmbilight.Ambilight import Ambilight
+from BlinkstickAmbilight.VirtualBlinkstick import VirtualBlinkStick
 
-from Ambilight import Ambilight
-from VirtualBlinkstick import VirtualBlinkStick
+__author__ = 'No3x'
 
 ambilight = Ambilight(60, 50)
 blinkstick = VirtualBlinkStick()

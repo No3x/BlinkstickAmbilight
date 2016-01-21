@@ -7,7 +7,6 @@ from socketIO_client import SocketIO, LoggingNamespace
 import math
 import collections
 
-
 class VirtualBlinkStick:
     currentColors = collections.OrderedDict()
 

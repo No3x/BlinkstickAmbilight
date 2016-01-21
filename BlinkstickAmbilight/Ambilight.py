@@ -4,7 +4,7 @@ import collections
 
 from PIL import ImageStat
 
-from ImageUtils import ImageUtils
+from BlinkstickAmbilight.ImageUtils import ImageUtils
 
 
 class Ambilight:

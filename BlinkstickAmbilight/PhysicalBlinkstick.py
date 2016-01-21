@@ -2,10 +2,9 @@ __author__ = 'No3x'
 import math
 import time
 
+from BlinkstickAmbilight.Ambilight import Ambilight
+from BlinkstickAmbilight.Prompt import Prompt
 from blinkstick import blinkstick
-
-from Ambilight import Ambilight
-from Prompt import Prompt
 
 NUMLED = 4
 BORDER = 50
