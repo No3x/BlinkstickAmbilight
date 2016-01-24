@@ -1,17 +1,21 @@
+from BlinkstickAmbilight.PhysicalBlinkstick import Blinkstick2812
 from BlinkstickAmbilight.Ambilight import Ambilight
-from BlinkstickAmbilight.VirtualBlinkstick import VirtualBlinkStick
+from BlinkstickAmbilight.BlinkstickMock import BlinkstickMock
 
 __author__ = 'No3x'
 
 ambilight = Ambilight(60, 50)
-blinkstick = VirtualBlinkStick()
-blinkstick.connect()
+#blinkstick = VirtualBlinkStick()
+blinkstick = BlinkstickMock()
 
-while True:
-    try:
-        ambilight.run()
-        colors = ambilight.currentColors.items()
-        blinkstick.setCurrentColors(colors)
-        blinkstick.run();
-    except KeyboardInterrupt:
-        print 'Interrupted'
+if blinkstick.connect():
+    while True:
+        try:
+            ambilight.run()
+            colors = ambilight.currentColors.items()
+            blinkstick.setCurrentColors(colors)
+            blinkstick.run();
+        except KeyboardInterrupt:
+            print 'Interrupted'
+else:
+    print "No BlinkSticks found"

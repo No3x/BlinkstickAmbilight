@@ -9,13 +9,12 @@ from blinkstick import blinkstick
 NUMLED = 4
 BORDER = 50
 
-
 class Blinkstick2812(blinkstick.BlinkStickPro):
     def __init__(self, ambilight=None, r_led_count=None, max_rgb_value=None, delay=None):
         self.ambilight = ambilight
         blinkstick.BlinkStickPro.__init__(self, r_led_count=r_led_count, max_rgb_value=max_rgb_value, delay=delay)
 
-    def insureWSMode(self):
+    def __insureWSMode(self):
         mode = self.bstick.get_mode()
         if mode is not 2:
             if Prompt().prompt.query_yes_no("Should I set the proper mode for you now? (Mode 2 : WS2812)", "no"):
@@ -38,6 +37,7 @@ class Blinkstick2812(blinkstick.BlinkStickPro):
         return roundedColors
 
     def run(self):
+        self.__insureWSMode()
         print "Running.."
         try:
             while 1:
@@ -64,7 +64,6 @@ class Blinkstick2812(blinkstick.BlinkStickPro):
 ambilight = Ambilight(NUMLED, BORDER)
 blinkstick2812 = Blinkstick2812(ambilight=ambilight, r_led_count=NUMLED, max_rgb_value=255, delay=0.002)
 if blinkstick2812.connect():
-    blinkstick2812.insureWSMode()
     blinkstick2812.run()
 else:
     print "No BlinkSticks found"
