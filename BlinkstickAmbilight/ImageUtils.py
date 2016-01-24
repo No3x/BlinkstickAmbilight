@@ -5,16 +5,28 @@ import Tkinter
 import pyscreeze
 from PIL import Image
 
-root = Tkinter.Tk()
+import ctypes
+user32 = ctypes.windll.user32
 
+
+def memoize(f):
+    def wrapped(*args, **kwargs):
+        if hasattr(wrapped, '_cached_val'):
+            return wrapped._cached_val
+        result = f(*args, **kwargs)
+        wrapped._cached_val = result
+        return result
+    return wrapped
 
 class ImageUtils:
     def __init__(self):
         self.WIDTH = self.getScreenSize()[0]
         self.HEIGHT = self.getScreenSize()[1]
 
+    @memoize
     def getScreenSize(self):
-        return (root.winfo_screenwidth(), root.winfo_screenheight())
+        size = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+        return size
 
     def makeImagesOfCorners(self, border):
         if 0 >= border:
